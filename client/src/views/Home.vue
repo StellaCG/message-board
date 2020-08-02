@@ -1,6 +1,18 @@
 <template>
   <div>
-    <h1>Full Stack Message Board</h1>
+    <div class="list-unstyled" v-for="message in messages" :key="message._id">
+      <li class="media">
+        <img v-if="message.imageURL" :src="message.imageURL" class="mr-3" :alt="message.subject" />
+        <div class="media-body">
+          <h4 class="mt-0 mb-1">{{message.username}}</h4>
+          <h5 class="mt-0 mb-1">{{message.subject}}</h5>
+          {{message.message}}
+          <br />
+          <small>{{message.created}}</small>
+        </div>
+      </li>
+      <hr>
+    </div>
   </div>
 </template>
 
@@ -9,10 +21,18 @@ const API_URL = 'http://localhost:3000/messages';
 
 export default {
   name: 'home',
+  data: () => ({
+    messages: [],
+  }),
   mounted() {
     fetch(API_URL).then((response) => response.json().then((result) => {
-      console.log(result);
+      this.messages = result;
     }));
+  },
+  methods: {
+    addMessage() {
+
+    },
   },
 };
 </script>
