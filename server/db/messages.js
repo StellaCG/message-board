@@ -14,7 +14,7 @@ const schema = Joi.object().keys({
         scheme: [
             /https?/
         ]
-    })
+    }).optional().allow('')
 });
 
 const messages = db.get('messages');
