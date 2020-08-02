@@ -41,6 +41,10 @@
         </div>
       </fieldset>
     </form>
+    <div v-if="error" class="alert alert-dismissible alert-danger">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <strong>Uh oh!</strong> {{error}}
+    </div>
     <div class="list-unstyled" v-for="message in reversedMessages" :key="message._id">
       <li class="media">
         <img v-if="message.imageURL" :src="message.imageURL" class="mr-3" :alt="message.subject" />
@@ -63,6 +67,7 @@ const API_URL = 'http://localhost:3000/messages';
 export default {
   name: 'home',
   data: () => ({
+    error: '',
     showMessageForm: false,
     messages: [],
     message: {
@@ -91,7 +96,14 @@ export default {
           'content-type': 'application/json',
         },
       }).then((response) => response.json().then((result) => {
-        this.messages.push(result);
+        if (result.details) {
+          const error = result.details.map((detail) => detail.message).join(' ');
+          this.error = error;
+        } else {
+          this.error = '';
+          this.showMessageForm = false;
+          this.messages.push(result);
+        }
       }));
     },
   },
